@@ -1,0 +1,2 @@
+#!/bin/bash
+./gradlew deploy --parallel --stacktrace --debug
