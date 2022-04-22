@@ -15,14 +15,11 @@ import mindustry.world.*;
 import mindustry.world.meta.*;
 import mindustry.world.blocks.*;
 
-public class Pawn extends Block {
+public class Pawn extends ChessPiece {
 	public Pawn(String name) {
 		super(name);
-		group = BlockGroup.turrets;
-		update = true;
 	}
-	public class PawnBuild extends Building implements ControlBlock {
-		public @Nullable BlockUnitc unit;
+	public class PawnBuild extends ChessPiece.ChessPieceBuild {
 		public boolean hasMovedOnce = false;
 
 		private final Prov<Point2> step1 = () -> new Point2(1, 0).rotate(rotation).add(this.tile.x, this.tile.y);
@@ -34,66 +31,17 @@ public class Pawn extends Block {
 		// public int enPassantDangerX = 0;
 		// public int enPassantDangerY = 0;
 
-		// thank you Router.java
 		@Override
-		public Unit unit(){
-			if(unit == null){
-				unit = (BlockUnitc)UnitTypes.block.create(team);
-				unit.tile(this);
-			}
-			return (Unit) unit;
-		}
-
-		private boolean isPossibleToMove(Point2 p){
-			Tile t = Vars.world.tile(p.x, p.y);
-			if (t == null || t.block() != Blocks.air) return false;
-			return true;
-		}
-
-		private boolean isPossibleToCapture(Point2 p){
-			Tile t = Vars.world.tile(p.x, p.y);
-			if (t == null || t.block() == Blocks.air || t.team() == team) return false;
-			return true;
-		}
-
 		public Seq possibleMoves(){
 			Seq<Point2> result = new Seq(0);
 			if (!hasMovedOnce){
-				if (isPossibleToMove(step1.get()) && isPossibleToMove(step2.get()))
+				if (isPossibleToMoveStrict(step1.get()) && isPossibleToMoveStrict(step2.get()))
 					result.add(step2.get());
 			}
-			if (isPossibleToMove(step1.get())) result.add(step1.get());
+			if (isPossibleToMoveStrict(step1.get())) result.add(step1.get());
 			if (isPossibleToCapture(capt1.get())) result.add(capt1.get());
 			if (isPossibleToCapture(capt2.get())) result.add(capt2.get());
 			return result;
-		}
-
-		// Thanks sh1penfire and GlennFolker!
-		public void moveTo(int x, int y){
-			Tile originalTile = this.tile;
-			Tile t = Vars.world.tile(x,y);
-			t.setBlock(this.block, this.team, this.rotation, () -> this);
-			this.unit();
-			this.unit.tile(this);
-			this.hasMovedOnce = true;
-
-			originalTile.build = null;
-			originalTile.setAir();
-		}
-		
-		@Override
-		public void updateTile(){
-			if(!this.isControlled()){
-				//TODO: servers.
-				if (Mathf.random() > 2/60) return;
-				Seq<Point2> possMoves = this.possibleMoves();
-				if (possMoves.isEmpty()) return;
-				Point2 pnt = possMoves.random();
-				moveTo(pnt.x, pnt.y);
-				return;
-			};
-			Point2 pnt = new Point2((int) this.unit().aimX/8, (int) this.unit().aimY/8);
-			if(this.possibleMoves().contains(pnt)) moveTo(pnt.x, pnt.y);
 		}
 	}
 }
