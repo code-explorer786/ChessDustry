@@ -23,7 +23,7 @@ public class ChessPiece extends Block {
 		size = 1;
 	}
 	public class ChessPieceBuild extends Building implements ControlBlock {
-		public final float probability = 2/60;
+		public final float probability = 0.1f;
 		public @Nullable BlockUnitc unit;
 		
 		// thank you Router.java

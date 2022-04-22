@@ -43,5 +43,11 @@ public class Pawn extends ChessPiece {
 			if (isPossibleToCapture(capt2.get())) result.add(capt2.get());
 			return result;
 		}
+
+		@Override
+		public void moveTo(int x, int y){
+			super.moveTo(x, y);
+			this.hasMovedOnce = true;
+		}
 	}
 }
