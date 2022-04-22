@@ -23,7 +23,7 @@ public class ChessPiece extends Block {
 		size = 1;
 	}
 	public class ChessPieceBuild extends Building implements ControlBlock {
-		public final float probability = 0.1f;
+		public float probability = 0.1f;
 		public @Nullable BlockUnitc unit;
 		
 		// thank you Router.java
@@ -54,8 +54,8 @@ public class ChessPiece extends Block {
 			return true;
 		}
 
-		public Seq possibleMoves(){
-			return new Seq(0);
+		public Seq<Point2> possibleMoves(){
+			return new Seq<Point2>(0);
 		}
 
 		// Thanks sh1penfire and GlennFolker!
