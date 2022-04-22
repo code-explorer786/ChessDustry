@@ -19,6 +19,8 @@ public class ChessPiece extends Block {
 	public ChessPiece(String name) {
 		super(name);
 		group = BlockGroup.turrets;
+		rotate = true;
+		destructible = true;
 		update = true;
 		size = 1;
 	}
@@ -36,23 +38,24 @@ public class ChessPiece extends Block {
 			return (Unit) unit;
 		}
 
-		public boolean isPossibleToMoveStrict(Point2 p){
-			Tile t = Vars.world.tile(p.x, p.y);
-			if (t == null || t.block() != Blocks.air) return false;
-			return true;
+		public boolean isPossibleToMoveStrict(int x, int y){
+			Tile t = Vars.world.tile(x, y);
+			return t != null && t.block() == Blocks.air;
 		}
 
-		public boolean isPossibleToCapture(Point2 p){
-			Tile t = Vars.world.tile(p.x, p.y);
-			if (t == null || t.block() == Blocks.air || t.team() == team) return false;
-			return true;
+		public boolean isPossibleToCapture(int x, int y){
+			Tile t = Vars.world.tile(x, y);
+			return t != null && t.block() != Blocks.air && t.team() != team;
 		}
 
-		public boolean isPossibleToMove(Point2 p){
-			Tile t = Vars.world.tile(p.x, p.y);
-			if (t == null || t.team() == team) return false;
-			return true;
+		public boolean isPossibleToMove(int x, int y){
+			Tile t = Vars.world.tile(x, y);
+			return t != null && t.team() != team;
 		}
+
+		public boolean isPossibleToMoveStrict(Point2 p) { return isPossibleToMoveStrict(p.x, p.y); }
+		public boolean isPossibleToCapture(Point2 p) { return isPossibleToCapture(p.x, p.y); }
+		public boolean isPossibleToMove(Point2 p) { return isPossibleToMove(p.x, p.y); }
 
 		public Seq<Point2> possibleMoves(){
 			return new Seq<Point2>(0);

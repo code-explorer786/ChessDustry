@@ -20,16 +20,17 @@ import static mindustry.type.ItemStack.*;
 import chess.world.blocks.defense.turrets.*;
 
 public class ChessBlocks implements ContentList {
-	public static Block pawn;
+	public static Block pawn, rook;
 
 	@Override
 	public void load(){
 		pawn = new Pawn("pawn"){{
 			requirements(Category.turret, with(Items.copper, 1));
-			destructible = true;
-			rotate = true;
-			health = 0x7FFFFFFF;
-			size = 1;
+			health = 5;
+		}};
+		rook = new Rook("rook"){{
+			requirements(Category.turret, with(Items.copper, 1));
+			health = 25;
 		}};
 	}
 }
