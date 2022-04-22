@@ -25,10 +25,10 @@ public class Pawn extends Block {
 		public @Nullable BlockUnitc unit;
 		public boolean hasMovedOnce = false;
 
-		private Prov<Point2> step1 = () -> new Point2(1, 0).rotate(rotation).add(this.tile.x, this.tile.y);
-		private Prov<Point2> step2 = () -> new Point2(2, 0).rotate(rotation).add(this.tile.x, this.tile.y);
-		private Prov<Point2> capt1 = () -> new Point2(1, 1).rotate(rotation).add(this.tile.x, this.tile.y);
-		private Prov<Point2> capt2  = () -> new Point2(1, -1).rotate(rotation).add(this.tile.x, this.tile.y);
+		private final Prov<Point2> step1 = () -> new Point2(1, 0).rotate(rotation).add(this.tile.x, this.tile.y);
+		private final Prov<Point2> step2 = () -> new Point2(2, 0).rotate(rotation).add(this.tile.x, this.tile.y);
+		private final Prov<Point2> capt1 = () -> new Point2(1, 1).rotate(rotation).add(this.tile.x, this.tile.y);
+		private final Prov<Point2> capt2  = () -> new Point2(1, -1).rotate(rotation).add(this.tile.x, this.tile.y);
 
 		// public boolean enPassantDanger = false;
 		// public int enPassantDangerX = 0;
@@ -59,7 +59,7 @@ public class Pawn extends Block {
 		public Seq possibleMoves(){
 			Seq<Point2> result = new Seq(0);
 			if (!hasMovedOnce){
-				if (isPossibleToMove(step2.get()))
+				if (isPossibleToMove(step1.get()) && isPossibleToMove(step2.get()))
 					result.add(step2.get());
 			}
 			if (isPossibleToMove(step1.get())) result.add(step1.get());
@@ -68,24 +68,24 @@ public class Pawn extends Block {
 			return result;
 		}
 
+		// Thanks sh1penfire and GlennFolker!
 		public void moveTo(int x, int y){
+			Tile originalTile = this.tile;
 			Tile t = Vars.world.tile(x,y);
-			t.setBlock(block, team, rotation);
-			t.build.remove();
-			t.build = this;
-			this.tile.setAir();
-			this.tile = t;
-			this.set(x*8, y*8);
+			t.setBlock(this.block, this.team, this.rotation, () -> this);
 			this.unit();
 			this.unit.tile(this);
 			this.hasMovedOnce = true;
+
+			originalTile.build = null;
+			originalTile.setAir();
 		}
 		
 		@Override
 		public void updateTile(){
 			if(!this.isControlled()){
 				//TODO: servers.
-				if (Mathf.random() > 1/20) return;
+				if (Mathf.random() > 2/60) return;
 				Seq<Point2> possMoves = this.possibleMoves();
 				if (possMoves.isEmpty()) return;
 				Point2 pnt = possMoves.random();
