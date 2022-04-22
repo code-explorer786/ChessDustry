@@ -3,6 +3,7 @@ package chess.world.blocks.defense.turrets;
 import java.lang.*;
 import arc.*;
 import arc.func.*;
+import arc.math.*;
 import arc.math.geom.*;
 import arc.struct.*;
 import arc.util.*;
@@ -38,7 +39,7 @@ public class Pawn extends Block {
 		public Unit unit(){
 			if(unit == null){
 				unit = (BlockUnitc)UnitTypes.block.create(team);
-				unita.tile(this);
+				unit.tile(this);
 			}
 			return (Unit) unit;
 		}
@@ -56,7 +57,7 @@ public class Pawn extends Block {
 		}
 
 		public Seq possibleMoves(){
-			Seq result = new Seq(0);
+			Seq<Point2> result = new Seq(0);
 			if (!hasMovedOnce){
 				if (isPossibleToMove(step2.get()))
 					result.add(step2.get());
@@ -85,8 +86,8 @@ public class Pawn extends Block {
 			if(!this.isControlled()){
 				//TODO: servers.
 				if (Mathf.random() > 1/20) return;
-				Seq possMoves = this.possibleMoves();
-				if (possMoves.size() == 0) return;
+				Seq<Point2> possMoves = this.possibleMoves();
+				if (possMoves.isEmpty()) return;
 				Point2 pnt = possMoves.random();
 				moveTo(pnt.x, pnt.y);
 				return;
