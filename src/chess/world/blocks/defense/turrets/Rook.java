@@ -17,7 +17,7 @@ public class Rook extends ChessPiece {
 			Seq<Point2> result = new Seq<Point2>(0);
 			int x = this.tile.x;
 			int y = this.tile.y;
-			for(int i = 0; i < 3; i++) {
+			for(int i = 0; i < 4; i++) {
 				int idx = Geometry.d4x[i];
 				int idy = Geometry.d4y[i];
 				int j;

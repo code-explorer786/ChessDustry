@@ -18,6 +18,7 @@ import mindustry.world.blocks.*;
 public class Pawn extends ChessPiece {
 	public Pawn(String name) {
 		super(name);
+		rotate = true;
 	}
 	public class PawnBuild extends ChessPiece.ChessPieceBuild {
 		public boolean hasMovedOnce = false;

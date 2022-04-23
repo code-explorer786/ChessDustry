@@ -7,6 +7,7 @@ import arc.math.*;
 import arc.math.geom.*;
 import arc.struct.*;
 import arc.util.*;
+import arc.graphics.g2d.*;
 import mindustry.*;
 import mindustry.mod.*;
 import mindustry.gen.*;
@@ -19,7 +20,6 @@ public class ChessPiece extends Block {
 	public ChessPiece(String name) {
 		super(name);
 		group = BlockGroup.turrets;
-		rotate = true;
 		destructible = true;
 		update = true;
 		size = 1;
@@ -86,6 +86,14 @@ public class ChessPiece extends Block {
 			};
 			Point2 pnt = new Point2((int) this.unit().aimX/8, (int) this.unit().aimY/8);
 			if(this.possibleMoves().contains(pnt)) moveTo(pnt.x, pnt.y);
+		}
+
+		@Override
+		public void draw(){
+			Draw.reset();
+			Draw.color(this.team.color);
+			// Building.java
+			Draw.rect(block.region, x, y, block.rotate ? rotdeg() : 0);
 		}
 	}
 }
