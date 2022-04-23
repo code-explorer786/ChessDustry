@@ -62,6 +62,7 @@ public class ChessPiece extends Block {
 		}
 
 		// Thanks sh1penfire and GlennFolker!
+		// Thank you sk7725 for making this easier! (i took some code from XeloUtils.java in BetaMindy)
 		public void moveTo(int x, int y){
 			Tile originalTile = this.tile;
 			Tile t = Vars.world.tile(x,y);
