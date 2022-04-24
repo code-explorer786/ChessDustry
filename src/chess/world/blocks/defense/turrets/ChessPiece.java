@@ -11,6 +11,7 @@ import arc.graphics.g2d.*;
 import mindustry.*;
 import mindustry.mod.*;
 import mindustry.gen.*;
+import mindustry.game.*;
 import mindustry.content.*;
 import mindustry.graphics.*;
 import mindustry.world.*;
@@ -47,12 +48,12 @@ public class ChessPiece extends Block {
 
 		public boolean isPossibleToCapture(int x, int y){
 			Tile t = Vars.world.tile(x, y);
-			return t != null && t.block() != Blocks.air && t.team() != team;
+			return t != null && t.block() != Blocks.air && t.team() != team && t.team() != Team.derelict;;
 		}
 
 		public boolean isPossibleToMove(int x, int y){
 			Tile t = Vars.world.tile(x, y);
-			return t != null && t.team() != team;
+			return t != null && t.team() != team && t.team() != Team.derelict;
 		}
 
 		public boolean isPossibleToMoveStrict(Point2 p) { return isPossibleToMoveStrict(p.x, p.y); }
