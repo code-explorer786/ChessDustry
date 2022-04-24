@@ -48,7 +48,7 @@ public class ChessPiece extends Block {
 
 		public boolean isPossibleToCapture(int x, int y){
 			Tile t = Vars.world.tile(x, y);
-			return t != null && t.block() != Blocks.air && t.team() != team && t.team() != Team.derelict;;
+			return t != null && t.block() != Blocks.air && t.team() != team && t.team() != Team.derelict;
 		}
 
 		public boolean isPossibleToMove(int x, int y){
