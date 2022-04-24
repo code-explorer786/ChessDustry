@@ -12,6 +12,7 @@ import mindustry.*;
 import mindustry.mod.*;
 import mindustry.gen.*;
 import mindustry.content.*;
+import mindustry.graphics.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
 import mindustry.world.blocks.*;
@@ -23,9 +24,10 @@ public class ChessPiece extends Block {
 		destructible = true;
 		update = true;
 		size = 1;
+		solid = true;
 	}
 	public class ChessPieceBuild extends Building implements ControlBlock {
-		public float probability = 0.1f;
+		public float probability = 1f/60;
 		public @Nullable BlockUnitc unit;
 		
 		// thank you Router.java
@@ -95,6 +97,16 @@ public class ChessPiece extends Block {
 			Draw.color(this.team.color);
 			// Building.java
 			Draw.rect(block.region, x, y, block.rotate ? rotdeg() : 0);
+
+			if(this.isControlled()){
+				Draw.alpha(0.5f);
+				Draw.z(Layer.end);
+				TextureRegion t = Core.atlas.find("chess-capture");
+				Seq<Point2> pMoves = this.possibleMoves();
+				for(Point2 p : pMoves){
+					Draw.rect(t, p.x*8, p.y*8, 0);
+				}
+			}
 		}
 	}
 }
