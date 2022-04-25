@@ -109,5 +109,9 @@ public class ChessPiece extends Block {
 				}
 			}
 		}
+
+		// Thanks buthed010203 and SMOLKEYS!
+		@Override
+		public void drawTeam(){}
 	}
 }
