@@ -53,7 +53,7 @@ public class ChessPiece extends Block {
 
 		public boolean isPossibleToMove(int x, int y){
 			Tile t = Vars.world.tile(x, y);
-			return t != null && t.team() != team && t.team() != Team.derelict;
+			return t != null || t.block() == Blocks.air && t.team() != team && t.team() != Team.derelict;
 		}
 
 		public boolean isPossibleToMoveStrict(Point2 p) { return isPossibleToMoveStrict(p.x, p.y); }
