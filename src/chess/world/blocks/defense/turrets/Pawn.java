@@ -28,11 +28,40 @@ public class Pawn extends ChessPiece {
 		private final Prov<Point2> capt1 = () -> new Point2(1, 1).rotate(rotation).add(this.tile.x, this.tile.y);
 		private final Prov<Point2> capt2  = () -> new Point2(1, -1).rotate(rotation).add(this.tile.x, this.tile.y);
 
-		// public boolean enPassantDanger = false;
-		// public int enPassantDangerX = 0;
-		// public int enPassantDangerY = 0;
+		public @Nullable Tile enPassantDanger;
+
+		public static boolean enPassantablePawn(Tile tile, Tile me){
+			return tile != null
+				&& tile.block() instanceof Pawn
+				&& ((PawnBuild) tile.build).enPassantDanger != null
+				&& ((PawnBuild) tile.build).enPassantDanger == me;
+		}
+
+		public static boolean enPassantable(Tile tile){
+			if(tile == null) return false;
+			for(int i = 0; i < 4; i++){
+				if(enPassantablePawn(tile.nearby(i), tile)) return true;
+			}
+			return false;
+		}
+
+		public static void enPassant(Tile tile){
+			if(tile == null) return;
+			for(int i = 0; i < 4; i++){
+				Tile near = tile.nearby(i);
+				if(enPassantablePawn(near, tile)){
+					near.setAir();
+				}
+			}
+		}
 
 		@Override
+		public boolean isPossibleToCapture(Point2 p){
+			return enPassantable(Vars.world.tile(p.x, p.y)) || super.isPossibleToCapture(p);
+
+		}
+
+               	@Override
 		public Seq possibleMoves(){
 			Seq<Point2> result = new Seq(0);
 			if (!hasMovedOnce){
@@ -47,8 +76,13 @@ public class Pawn extends ChessPiece {
 
 		@Override
 		public void moveTo(int x, int y){
+			enPassantDanger = null;
+			if(x == step2.get().x && y == step2.get().y) enPassantDanger = this.tile.nearby(this.rotation);
+			boolean doPassant = (x == capt1.get().x && y == capt1.get().y)
+			                      || (x == capt2.get().x && y == capt2.get().y);
 			super.moveTo(x, y);
 			this.hasMovedOnce = true;
+			if(doPassant) enPassant(this.tile);
 		}
 	}
 }
